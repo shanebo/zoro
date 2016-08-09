@@ -179,13 +179,6 @@ var Zoro = (function(el, options) {
         var pos = getCaretPosition();
         var hasSelection = el.selectionStart != el.selectionEnd;
 
-        // console.log('el.selectionStart: ' + el.selectionStart);
-        // console.log('el.selectionEnd: ' + el.selectionEnd);
-        // console.log('selectedText: ' + selectedText);
-        // console.log('hasSelection: ' + hasSelection);
-        // console.log('key: ' + key);
-        // console.log('char: ' + char);
-
         if (cutCopyPasteKeys || movementKeys) {
             return true;
         }
