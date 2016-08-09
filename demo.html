@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Zoro.js Demo</title>
+    <script type="text/javascript" src="zoro.js" ></script>
+	<script>
+		function onLoad() {
+            // Expiry: '99 / 99',
+            // Date: '99/99/9999',
+            // DateTime: '99/99/9999 99:99:99',
+            // DateTimeShort: '99/99/9999 99:99',
+            // Time: '99:99:99',
+            // TimeShort: '99:99',
+            // Ssn: '999-99-9999',
+            // Phone: '(999) 999-9999'
+
+			new Zoro(document.getElementById('sample-ssnmask'), {
+				mask: '999-99-9999',
+				placeHolder: 'SSN: 999-99-9999'
+			});
+
+            new Zoro(document.getElementById('sample-madeup'), {
+                mask: 'AAAA-AAAA-9999-9999',
+                placeHolder: 'Made Up AAAA-AAAA-9999-9999'
+            });
+
+            new Zoro(document.getElementById('cc'), {
+                mask: '9999 9999 9999 9999',
+                placeHolder: '•••• •••• •••• ••••'
+            });
+
+            new Zoro(document.getElementById('sample-expiry'), {
+                mask: '99 / 99',
+                placeHolder: 'Expires 01 / 10'
+            });
+
+			new Zoro(document.getElementById('sample-date'), {
+				mask: '99/99/9999',
+				placeHolder: 'Date: 01/01/2015'
+			});
+
+			new Zoro(document.getElementById('sample-phone'), {
+				mask: '(999) 999-9999',
+				placeHolder: 'Phone: (999) 999-9999'
+			});
+		}
+	</script>
+
+    <style>
+        body {
+            padding: 30px
+        }
+
+        * {
+            font-family: menlo;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+        input {
+            font-size: 20px;
+            padding: 8px 12px;
+            width: 300px
+        }
+        div {
+            margin-bottom: 18px
+        }
+    </style>
+</head>
+<body onload="onLoad()">
+
+  <fieldset>
+    <legend>Zoro Demo</legend>
+
+    <div>
+        <label for="test">CC:</label>
+        <input type="text" id="cc" value=""></input>
+    </div>
+
+    <div>
+        <label for="sample-madeup">Alpha:</label>
+        <input type="text" id="sample-madeup"></input>
+    </div>
+
+    <div>
+        <label for="sample-expiry">Expiration:</label>
+        <input type="text" id="sample-expiry"></input>
+    </div>
+
+		<div>
+			<label for="sample-ssnmask">SSN:</label>
+			<input type="text" id="sample-ssnmask"></input>
+		</div>
+
+		<div>
+			<label for="sample-date">Date:</label>
+			<input type="text" id="sample-date"></input>
+		</div>
+
+		<div>
+			<label for="sample-phone">Phone:</label>
+			<input type="text" id="sample-phone" value="8179456102"></input>
+		</div>
+  </fieldset>
+
+</body>
+</html>
