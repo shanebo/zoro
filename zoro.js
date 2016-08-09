@@ -84,24 +84,6 @@ var Zoro = (function(el, options) {
         }
     }
 
-    // var getSelectionText = function() {
-    //     var text = '';
-    //     if (window.getSelection) {
-    //         text = window.getSelection().toString();
-    //     } else if (document.selection && document.selection.type != 'Control') {
-    //         text = document.selection.createRange().text;
-    //     }
-    //     return text;
-    // }
-
-    // var getSelectionText = function() {
-    //     var text = '' + window.getSelection().toString();
-    //     if (text == '' && el.selectionStart != el.selectionEnd){
-    //         text = el.value.substring(el.selectionStart, el.selectionEnd);
-    //     }
-    //     return text;
-    // }
-
     var isValidMaskChar = function(maskChar, char) {
         if (maskChar === '9' && /\d/.test(char)) {
             return true;
