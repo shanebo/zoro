@@ -69,22 +69,6 @@ var Zoro = (function(el, options) {
         return pos;
     }
 
-/*
-    var getCaretPosition = function() {
-        var pos = 0;
-        if (document.selection) {
-            // IE Support
-            el.focus();
-            var sel = document.selection.createRange();
-            sel.moveStart('character', - el.value.length);
-            pos = sel.text.length;
-        } else if (el.selectionStart || el.selectionStart == '0') {
-            pos = el.selectionStart;
-        }
-        return pos;
-    }
-*/
-
     var setCaretPosition = function(index) {
         if (el.createTextRange) {
             var range = el.createTextRange();
@@ -100,15 +84,23 @@ var Zoro = (function(el, options) {
         }
     }
 
-    var getSelectionText = function() {
-        var text = '';
-        if (window.getSelection) {
-            text = window.getSelection().toString();
-        } else if (document.selection && document.selection.type != 'Control') {
-            text = document.selection.createRange().text;
-        }
-        return text;
-    }
+    // var getSelectionText = function() {
+    //     var text = '';
+    //     if (window.getSelection) {
+    //         text = window.getSelection().toString();
+    //     } else if (document.selection && document.selection.type != 'Control') {
+    //         text = document.selection.createRange().text;
+    //     }
+    //     return text;
+    // }
+
+    // var getSelectionText = function() {
+    //     var text = '' + window.getSelection().toString();
+    //     if (text == '' && el.selectionStart != el.selectionEnd){
+    //         text = el.value.substring(el.selectionStart, el.selectionEnd);
+    //     }
+    //     return text;
+    // }
 
     var isValidMaskChar = function(maskChar, char) {
         if (maskChar === '9' && /\d/.test(char)) {
@@ -129,10 +121,10 @@ var Zoro = (function(el, options) {
         if (forceLower) char = char.toLowerCase();
 
         if (index < el.value.length) {
-            // console.log('input is full so replace chars');
+            // input is full so replace chars
             el.value = replaceAt(el.value, index, char);
         } else {
-            // console.log('input is NOT full so add chars');
+            // input is NOT full so add chars
             el.value = el.value.slice(0, index) + char + el.value.slice(index);
         }
 
@@ -140,7 +132,7 @@ var Zoro = (function(el, options) {
     }
 
     var walkMask = function(char, index, key){
-        // console.log('walkmask');
+        // walkmask
         if (!(index <= el.value.length)) return;
 
         var maskChar = mask.charAt(index);
@@ -149,80 +141,80 @@ var Zoro = (function(el, options) {
         var formatAlreadyThere = isFormatChar && el.value.charAt(index) === maskChar;
 
         if (isMaskChar && isValidMaskChar(maskChar, char)) {
-            // console.log('is valid char');
+            // is valid char
             insertChar(char, index);
             setCaretPosition(index + 1);
             walkMask(null, index + 1, key);
 
         } else if (formatAlreadyThere) {
-            // console.log('format char is there');
+            // format char is there
             if (key !== keys.backSpace) setCaretPosition(index + 1);
             walkMask(char, index + 1, key);
 
         } else if (isFormatChar) {
-            // console.log('is format char but its not there');
+            // is format char but its not there
             insertChar(maskChar, index);
             setCaretPosition(index + 1);
             walkMask(char, index + 1, key);
 
         } else {
-            // console.log('not valid and isnt format');
+            // not valid and isnt format
             // NOT: valid char, formatChar
             // walkMask(null, index + 1, key);
         }
     }
 
-    // el.onfocus = function(e) {
-    //     if (el.value.length === 0) {
-    //         el.value = mask.split('').map(function(char){
-    //             return (maskChars.indexOf(char) > -1) ? ' ' : char;
-    //         }).join('');
-    //         setTimeout(function() {
-    //             setCaretPosition(0);
-    //         }, 10);
-    //     }
-    // }
-
     el.onkeydown = function(e) {
-        var key = e.which;
+        var key = e.which || e.keyCode;
+        if (e.keyCode >= 96 && e.keyCode <= 105) {
+            // converts numpad keycode to 0-9 keycodes
+            key = e.keyCode - 48;
+        }
+
         var char = e.shiftKey ? String.fromCharCode(key).toUpperCase() : String.fromCharCode(key).toLowerCase();
         var cutCopyPasteKeys = [keys.v, keys.c, keys.x].indexOf(key) > -1 && e.ctrlKey;
         var movementKeys = [keys.up, keys.right, keys.down, keys.left, keys.tab].indexOf(key) > -1;
-        var modifierKeys = e.ctrlKey || e.shiftKey;
-        var deleteKeys = key === keys.backSpace || key === keys.delete;
-        var selectedText = getSelectionText();
-        var hasSelection = selectedText.length;
+        // var modifierKeys = e.ctrlKey || e.shiftKey;
+        // var deleteKeys = key === keys.backSpace || key === keys.delete;
         var pos = getCaretPosition();
+        var hasSelection = el.selectionStart != el.selectionEnd;
+
+        // console.log('el.selectionStart: ' + el.selectionStart);
+        // console.log('el.selectionEnd: ' + el.selectionEnd);
+        // console.log('selectedText: ' + selectedText);
+        // console.log('hasSelection: ' + hasSelection);
+        // console.log('key: ' + key);
+        // console.log('char: ' + char);
 
         if (cutCopyPasteKeys || movementKeys) {
-//        if (cutCopyPasteKeys || movementKeys || modifierKeys) {
             return true;
         }
 
         if (hasSelection) {
-            // console.log('selection that was replaced');
+            // selection to replace
             // i need to check if it's a valid char or backspace before replacing
+            var selectedText = el.value.substring(el.selectionStart, el.selectionEnd);
             var emptiedSelectedText = selectedText.replace(/[^\-_\(\),\[\]\:\.\•\,\$\%\@\ \/]/g, ' ');
             el.value = el.value.replace(selectedText, emptiedSelectedText);
             setCaretPosition(pos);
 
         } else if (key === keys.backSpace) {
-            // console.log('backspace char');
+            // backspace char
             var item = el.value.charAt(pos - 1);
             var isFormatChar = formatChars.indexOf(item) > -1;
             if (!isFormatChar && pos > 0) {
                 el.value = replaceAt(el.value, pos - 1, ' ');
             }
-           setCaretPosition(pos - 1);
+            setCaretPosition(pos - 1);
 
         } else if (key === keys.delete) {
-            // console.log('delete char');
+            // delete char
             var item = el.value.charAt(pos);
             var isFormatChar = formatChars.indexOf(item) > -1;
             if (!isFormatChar && pos + 1 <= mask.length) {
                 el.value = replaceAt(el.value, pos, ' ');
             }
-           setCaretPosition(pos + 1);
+            setCaretPosition(pos + 1);
         }
 
         walkMask(char, pos, key);
@@ -235,5 +227,4 @@ var Zoro = (function(el, options) {
         var maskedValue = applyMask(_unmaskedValue);
         el.value = maskedValue;
     }
-
 });
