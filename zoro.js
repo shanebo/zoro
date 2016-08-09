@@ -1,16 +1,20 @@
-
-
 /*
-Issues:
+title: zoro
+description: An input masker
+license: MIT-style
+authors:
+- Shane Thacker <shane@steadymade.com>
+requires:
+- Nothing
+
+Todos:
 1) if you try to delete from the first caret pos it won't walk
-2) Firefox doesnt delete substrings on selections
-3) when user focuses the input put the cursor at the first instance of a maskChar
-*/
-﻿
-/*
+2) when user focuses the input put the cursor at the first instance of a maskChar
+3) Fix number and alpha mixed mask example
+
 Idea:
 1) take the mask and strip out formatChars
-2) as user types add valid chars against the stripped mask and set to a global var
+2) as user types add valid chars against the stripped mask and set to a var
 3) each time a char is added to the global unformatted var run the formatter
 4) make sure to keep the caret pos where the user has it
 */
