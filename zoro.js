@@ -24,7 +24,7 @@ var Zoro = (function(el, options) {
     'use strict';
 
     var formatChars = ['-', '_', '(', ')', '[', ']', ':', '.', ',', '$', '%', '@', ' ', '/'];
-    var maskChars = ['A', '9', '*'];
+    var maskChars = ['A', '9', 'X'];
     var forceUpper = options.forceUpper || false;
     var forceLower = options.forceLower || false;
     var mask = options.mask;
@@ -39,6 +39,7 @@ var Zoro = (function(el, options) {
         end: 35,
         shift: 16,
         control: 17,
+        enter: 13,
         v: 86,
         c: 67,
         x: 88
@@ -95,6 +96,9 @@ var Zoro = (function(el, options) {
         if (maskChar === 'A' && /^[a-zA-Z]+$/.test(char)) {
             return true;
         }
+        if (maskChar === 'X' && /^[a-zA-Z\d]+$/.test(char)) {
+            return true;
+        }
         return false;
     }
 
@@ -119,7 +123,7 @@ var Zoro = (function(el, options) {
 
     var walkMask = function(char, index, key){
         // walkmask
-        if (!(index <= el.value.length)) return;
+        if (!(index <= el.value.length) || char === null) return;
 
         var maskChar = mask.charAt(index);
         var isMaskChar = maskChars.indexOf(maskChar) > -1;
@@ -197,8 +201,10 @@ var Zoro = (function(el, options) {
         }
 
         walkMask(char, pos, key);
-        e.preventDefault();
-        return false;
+        if (key != keys.enter) {
+            e.preventDefault();
+            return false;
+        }
     }
 
     if (el.value.length) {
